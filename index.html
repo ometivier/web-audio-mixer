@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 	<head> 
 		<meta charset="UTF-8">
-		<meta name="description" content="ReMixer is a Web Audio experiment by Middle Ear Media."/>
+		<meta name="description" content="Web Audio Loop Mixer is a Web Audio experiment by Middle Ear Media."/>
 		<meta name="keywords" content="web, audio, loop, mixer, html5, css3, javascript, jquery, web audio api, obadiah metivier, obadiah, metivier, middle ear media, middle ear, interactive"/>
 		<meta name="author" content="Obadiah Metivier"/>
 		<title>Web Audio Loop Mixer by Middle Ear Media</title>
@@ -28,6 +29,9 @@
 					<button onclick="stopSound()" disabled>Stop</button>
 				</div>				
 				<div class="strip">
+					<div class="stripSection">
+						<p class="label"><h3>Ch 1</h3></p>
+					</div>				
 					<div class="stripSection">			
 						<p class="knobContainer label"><span class="green">Gain</span>
 						<input id="gain-1" data-step="1" data-min="0" data-max="20" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#8FE356" data-bgColor="#777" value="10" /></p>
@@ -56,8 +60,17 @@
 					<div class="stripSection">
 						<p class="label"><span class="checkbox-label">Mute</span><input type="checkbox" id="mute-1" /><label for="mute-1"><span></span></label></p>
 					</div>
+					<div class="stripSection">			
+						<p class="knobContainer label"><span class="pink">Delay</span>
+						<input id="delay-1" data-step="1" data-min="0" data-max="10" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#E455E4" data-bgColor="#777" value="0" /></p>
+						<p class="knobContainer label"><span class="purple">Distortion</span>
+						<input id="distortion-1" data-step="1" data-min="0" data-max="10" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#944ddc" data-bgColor="#777" value="0" /></p>							
+					</div>
 				</div>
 				<div class="strip">
+					<div class="stripSection">
+						<p class="label"><h3>Ch 2</h3></p>
+					</div>				
 					<div class="stripSection">			
 						<p class="knobContainer label"><span class="green">Gain</span>
 						<input id="gain-2" data-step="1" data-min="0" data-max="20" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#8FE356" data-bgColor="#777" value="10" /></p>
@@ -86,8 +99,17 @@
 					<div class="stripSection">
 						<p class="label"><span class="checkbox-label">Mute</span><input type="checkbox" id="mute-2" /><label for="mute-2"><span></span></label></p>
 					</div>
+					<div class="stripSection">			
+						<p class="knobContainer label"><span class="pink">Delay</span>
+						<input id="delay-2" data-step="1" data-min="0" data-max="10" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#E455E4" data-bgColor="#777" value="0" /></p>
+						<p class="knobContainer label"><span class="purple">Distortion</span>
+						<input id="distortion-2" data-step="1" data-min="0" data-max="10" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#944ddc" data-bgColor="#777" value="0" /></p>						
+					</div>					
 				</div>
 				<div class="strip">
+					<div class="stripSection">
+						<p class="label"><h3>Ch 3</h3></p>
+					</div>				
 					<div class="stripSection">			
 						<p class="knobContainer label"><span class="green">Gain</span>
 						<input id="gain-3" data-step="1" data-min="0" data-max="20" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#8FE356" data-bgColor="#777" value="10" /></p>
@@ -116,8 +138,17 @@
 					<div class="stripSection">
 						<p class="label"><span class="checkbox-label">Mute</span><input type="checkbox" id="mute-3" /><label for="mute-3"><span></span></label></p>
 					</div>
+					<div class="stripSection">			
+						<p class="knobContainer label"><span class="pink">Delay</span>
+						<input id="delay-3" data-step="1" data-min="0" data-max="10" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#E455E4" data-bgColor="#777" value="0" /></p>
+						<p class="knobContainer label"><span class="purple">Distortion</span>
+						<input id="distortion-3" data-step="1" data-min="0" data-max="10" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#944ddc" data-bgColor="#777" value="0" /></p>						
+					</div>
 				</div>
 				<div class="strip">
+					<div class="stripSection">
+						<p class="label"><h3>Ch 4</h3></p>
+					</div>				
 					<div class="stripSection">			
 						<p class="knobContainer label"><span class="green">Gain</span>
 						<input id="gain-4" data-step="1" data-min="0" data-max="20" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#8FE356" data-bgColor="#777" value="10" /></p>
@@ -146,17 +177,63 @@
 					<div class="stripSection">
 						<p class="label"><span class="checkbox-label">Mute</span><input type="checkbox" id="mute-4" /><label for="mute-4"><span></span></label></p>
 					</div>
+					<div class="stripSection">			
+						<p class="knobContainer label"><span class="pink">Delay</span>
+						<input id="delay-4" data-step="1" data-min="0" data-max="10" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#E455E4" data-bgColor="#777" value="0" /></p>
+						<p class="knobContainer label"><span class="purple">Distortion</span>
+						<input id="distortion-4" data-step="1" data-min="0" data-max="10" data-width="60" data-cursor=true data-thickness=.5 data-angleOffset=-125 data-angleArc=250 data-fgColor="#944ddc" data-bgColor="#777" value="0" /></p>						
+					</div>
+				</div>
+				<div class="strip" id="delay">
+					<div class="stripSection">
+						<p class="label"><h3 class="pink">Delay</h3></p>
+					</div>
+					<div class="stripSection">			
+						<p class="label"><span class="pink">Level</span>
+						<input id="delayLevel" class="Slider" type="range" min="0" max="1" step="0.1" value="1"/></p>						
+					</div>					
+					<div class="stripSection">
+						<p class="label"><span class="pink">Delay Time</span>
+						<input id="delayTime" class="Slider" type="range" min="0.05" max="1" step="0.05" value="0.5"/></p>
+					</div>
+					<div class="stripSection">
+						<p class="label"><span class="pink">Feedback</span>
+						<input id="delayFeedback" class="Slider" type="range" min="0" max="0.95" step="0.05" value="0.8"/></p>
+					</div>
+					<div class="stripSection">
+						<p class="label"><span class="pink">Cutoff Freq</span>
+						<input id="delayFilter" class="Slider" type="range" min="0" max="4000" step="100" value="1000"/></p>
+					</div>
+<!--
+					<div class="stripSection">
+						<p class="label"><h3 class="purple">Dist.</h3></p>
+					</div>
+					<div class="stripSection">			
+						<p class="label"><span class="purple">Level</span>
+						<input id="distortionLevel" class="Slider" type="range" min="0" max="1" step="0.1" value="0.3"/></p>						
+					</div>					
+-->
 				</div>				
 			</div>
 			<div id="credits">
-				<h2><strong>Web Audio Loop Mixer</strong> is a four channel loop mixer.</h2>
+				<h2><strong>Web Audio Loop Mixer</strong> is a four channel loop mixer with effects.</h2>
 
 				<p class="info">To get the party started, select audio loops of equal length from your hard drive for each channel.</p>
 				
-				<p><a href="http://middleearmedia.com/apps/web-audio-loop-mixer/" title="Learn more about Web Audio Loop Mixer">Web Audio Loop Mixer</a> is an experiment by <a href="http://middleearmedia.com/" title="Middle Ear Media">Middle Ear Media</a>.</p>
+				<p><strong>Web Audio Loop Mixer</strong> is an experiment by <a href="http://middleearmedia.com/" title="Middle Ear Media">Middle Ear Media</a>.</p>
 				<p class="small-text"><span class="red">* </span>Keep in mind you need a modern browser for this to work!</p>
 			</div>
 		</div>
 		<script src="assets/js/webaudioloopmixer.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-59683033-1', 'auto');
+  ga('send', 'pageview');
+
+</script>		
 	</body>
 </html>
