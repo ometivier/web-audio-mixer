@@ -1,0 +1,229 @@
+/*
+ * Name: Web Audio Loop Mixer
+ * Description: Web Audio API Mixer. Audio Source via User Media.
+ * Author: Obadiah Metivier
+ * Author URI: http://middleearmedia.com/ 
+ * Version: 2.0
+*/
+
+/* --------------- Fluidity --------------- */
+/* Wrap tables or pre elements in a div with this class */
+.overflow-container { overflow-y: scroll; }
+/* Aspect ratios for media objects i.e canvas, iframe, video, svg etc. Defaults to 16x9 */
+.aspect-ratio { height: 0; padding-top: 56.25%; position: relative; }
+.aspect-ratio--object { bottom: 0; height: 100%; left: 0; position: absolute; right: 0; top: 0; width: 100%; z-index: 100; }
+/* Responsive Utilities */
+img, canvas, iframe, video, audio, svg { max-width: 100%; }
+
+/* Typography */
+h1 {
+    color: #ddb;
+    font-family: Arial,sans-serif;
+    font-size: 2.5rem;
+	margin: .2em auto;
+	text-align: center;
+	text-transform: uppercase;
+}
+h1 span {
+    color: #56A1E3;
+}
+h2 {
+	color: #ddb;
+	margin-bottom: -.5em;	
+	text-align: center;	
+}
+#controls h2 {
+	text-align: center;
+}
+h3 {
+	color: #aaa;
+}
+a {
+	color: #56A1E3;
+	text-decoration: none;
+}
+a:hover {
+	color: #f66;
+	text-decoration:none;
+}
+#credits {
+	clear: both;
+	text-align: center;
+	width: 100%;
+}
+
+/* Utility */
+#controls ::selection { 
+	background: transparent; 
+	color: #fff; /* Safari */
+}
+
+/* Layout */
+* {
+    box-sizing:border-box;   /* Everything else */
+}
+html {
+	overflow-y: scroll; /* force scrollbar to eliminate horizontal jump */
+}
+body {
+	background-color: #111;
+	background-image: url('assets/images/background.jpg');
+	color: #bbb;
+	/* Helvetica/Arial-based sans serif stack */
+	font-family: Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+}
+#page-wrap {
+	margin: 2em auto 0;
+	max-width: 800px;
+}
+.info {
+	text-align: center;
+}
+
+/* Mixing Board */
+.panel {
+	background-color: #ddb;
+	border-radius: 0.5em;
+    color: #888;
+	margin: 2em 0;
+    padding: 1em;
+}
+
+.panel strong {
+	color: #ddd;
+}
+.strip {
+	background-image: url("assets/images/gray.png");
+	border: 1px solid #333;
+    border-radius: .5em;
+	box-shadow: 0 0 .5em #666;
+    color: #cc9;
+	display: inline-block;
+	margin: 0 auto .5em;
+	padding: 0;
+	width: 100%;
+}
+.dark {
+	background-color: #222;
+	background-image: none;
+}
+.stripSection {
+	float: left;
+	height: 100%;
+	padding: .5em 0 0;
+}
+.last {
+	border-right: none;
+}
+
+.stripTransport {
+    color: #cc9;
+	margin: 0 auto .5em;
+	padding: .5em;
+}
+
+/* Control Inputs */
+input[type="range"] {
+
+}
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background-color: #444;
+	width: 1em;
+	height: 1em;
+	border-radius: 1em;
+	border: 2px solid #6ACC28;
+	vertical-align: middle;	
+}
+.SliderContainer {
+	text-align: center;
+	margin-top: .5em;
+	margin-bottom: 0em;
+}
+.label {
+	float: left;	
+	margin-bottom: .25em;
+	margin-top: 0;	
+}
+.label span {
+    display: block;
+	margin-bottom: .125em;
+    text-align: center;
+    vertical-align: top;
+}
+.label span.checkbox-label {
+	min-width: 3.875em;
+}
+input[type="checkbox"] {
+	display:none;
+	margin: .25em;
+}
+input[type="checkbox"] + label span {
+	background: url('assets/images/check_radio_sheet.png') -39px top no-repeat;
+	cursor: pointer;
+	height: 1.1875em;
+	margin: 1em auto 1.375em;
+	vertical-align: middle;
+	width: 1.1875em;
+}
+input[type="checkbox"]:checked + label span {
+	background: url('assets/images/check_radio_sheet.png') -58px top no-repeat;
+}
+
+/* Source and Trasport Section */
+input[type="file"] {
+	-webkit-box-align: baseline;
+	background-color: #000;	
+	border: 1px solid #222;
+	border-radius: .3em;
+	color: inherit;
+	text-align: start;
+	max-width: 24%;
+}
+
+input[type="button"], input[type="submit"], input[type="reset"], input[type="file"]::-webkit-file-upload-button, button {
+	-webkit-box-align: center;
+	text-align: center;
+	cursor: default;
+	padding: .5625em 1em .625em;
+
+	font-size: 1em;
+}
+
+/* Knobs */
+.knobContainer {
+	height: 5em;
+	text-align: center;
+	width: 5em;
+	float: left;
+}
+
+/* Miscellaneous */
+.small-text {
+	font-size:.8em;
+}
+.active {
+    color: #56A1E3;
+}
+.biege {
+    color: #cc9;
+}
+.green {
+    color: #8FE356;
+}
+.yellow {
+    color: #E3DC52;
+}
+.orangeLight {
+    color: #E3AA54;
+}
+.orangeDark {
+    color: #E38356;
+}
+.red {
+    color: #f66;
+}
+.blue {
+    color: #56A1E3;
+}
