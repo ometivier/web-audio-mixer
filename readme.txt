@@ -1,15 +1,15 @@
 === Web Audio Loop Mixer - An experiment by Middle Ear Media. ===
 
 Author: Obadiah Metivier
-Author URI: http://middleearmedia.com/
+Author URI: http://middleearmedia.com/webaudioloopmixer/
 Tags: web audio api, mixer, loop, html5, css3, javascript, jquery, middle ear media, obadiah metivier
-Stable tag: 2.0
+Stable tag: 2.2
 
-Web Audio Loop Mixer is a four channel mixer. To get the party started, select an audio source file (mp3 or wav, etc.) from your hard drive for each channel.
+Web Audio Loop Mixer is a four channel mixer with effects. To get the party started, select an audio source file (mp3 or wav, etc.) from your hard drive for each channel.
 
 == Description ==
 
-Web Audio Loop Mixer is a four channel mixer. To get the party started, select an audio source file (mp3 or wav, etc.) from your hard drive for each channel. It uses the Web Audio API, jQuery, jQuery Knob, and is based on Channel Strip.
+Web Audio Loop Mixer is a four channel mixer with effects. To get the party started, select an audio source file (mp3 or wav, etc.) from your hard drive for each channel. It uses the Web Audio API, jQuery, jQuery Knob, and is based on Channel Strip.
 
 == Changelog ==
 
@@ -29,3 +29,10 @@ Web Audio Loop Mixer is a four channel mixer. To get the party started, select a
 = 2.0 =
 * Convert Channel Strip into four channel mixer. Fluidify CSS styles and convert all px into em. 02/08/2015.
 * Rename variables and rewire into proper mixer matrix. Rename project Web Audio Loop Mixer. 02/09/2015.
+
+= 2.1 =
+* Add Delay knobs. Wire up FX and FX sends. Add Delay controls. 02/11/2015.
+* Add Strip Titles. Get delay to work properly. 02/12/2015.
+
+= 2.2 =
+* Add Distortion function. Add Distortion knobs. Wire up FX and FX sends. Add Distortion controls. Add webkit fallback to audioContext. Change color of delay to pink. Change color of distortion to purple. Update readme.txt. 02/14/2015.

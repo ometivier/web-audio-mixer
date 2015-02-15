@@ -1,9 +1,9 @@
 /*
  * Name: Web Audio Loop Mixer
- * Description: Web Audio API Mixer. Audio Source via User Media.
+ * Description: Web Audio API Mixer with Reverb. Audio Source via User Media.
  * Author: Obadiah Metivier
  * Author URI: http://middleearmedia.com/ 
- * Version: 2.0
+ * Version: 2.2
 */
 
 /* --------------- Fluidity --------------- */
@@ -36,7 +36,8 @@ h2 {
 	text-align: center;
 }
 h3 {
-	color: #aaa;
+    margin: 0.5em 1em;
+    text-transform: uppercase;
 }
 a {
 	color: #56A1E3;
@@ -75,7 +76,7 @@ body {
 }
 #page-wrap {
 	margin: 2em auto 0;
-	max-width: 800px;
+	max-width: 980px;
 }
 .info {
 	text-align: center;
@@ -226,4 +227,10 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 }
 .blue {
     color: #56A1E3;
+}
+.pink {
+    color: #E455E4;
+}
+.purple {
+    color: #944ddc;
 }

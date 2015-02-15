@@ -1,9 +1,9 @@
 /*
  * Name: Web Audio Loop Mixer
- * Description: Four Channel Loop Mixer. Audio Source via User Media.
+ * Description: Four Channel Loop Mixer with Effects. Audio Source via User Media.
  * Author: Obadiah Metivier
- * Author URI: http://middleearmedia.com/
- * Version: 2.0
+ * Author URI: http://middleearmedia.com/webaudioloopmixer/
+ * Version: 2.2
  */
 
 // This makes the knobs work (along with jquery.knob.js)
@@ -23,15 +23,11 @@
 	};	
 })( jQuery );
 			
-var context = new window.AudioContext(); // Create audio container
+var context = new (window.AudioContext || window.webkitAudioContext)(); // Create audio container with webkit fallback
 var source1 = null; // Create empty audio source 1
-
 var source2 = null; // Create empty audio source 2
-var buffer2 = null; // Create empty buffer 2
 var audioBuffer2 = null; // Create empty audio buffer 2
-var source3 = null; // Create empty audio source 3
 var audioBuffer3 = null; // Create empty audio buffer 3
-var source4 = null; // Create empty audio source 4
 var audioBuffer4 = null; // Create empty audio buffer 4
 
 // Convolver - Reverb - load the impulse response asynchronously
@@ -154,13 +150,45 @@ function playSound() {
 	source4.loop = true; // Make it loop
 	source4.connect(gain_4);
 	source4.start(0); // Play immediately
-
-	reverb = context.createBufferSource(); // Create a sound source 1
+	
+	reverb = context.createBufferSource(); // Create an reverb sound source
 	reverb.buffer = impulse; // Attatch our Audio impulse Data as it's Buffer
 	reverb.normalize = true; // Perform a scaled RMS-power analysis of the audio data in buffer to calculate a normalizationScale
-	reverb.start(0); // Play the Sound Immediately
+	// reverb.loop = true; // Make it loop. is this needed ???
+	reverb.start(0); // Play the Impulse Sound Immediately
+
+	// Duplicate these functions so settings are remembered if stop button is pressed	
+	$(function () {
+		document.getElementById('delayTime').addEventListener('change', function() {
+			delay.delayTime.value = this.value;
+		});
+	})
+	$(function () {
+		document.getElementById('delayFeedback').addEventListener('change', function() {
+			delayFeedback.gain.value = this.value;
+		});
+	})
+	$(function () {
+		document.getElementById('delayFilter').addEventListener('change', function() {
+			delayFilter.frequency.value = this.value;
+		});
+	})
+	$(function () {
+		document.getElementById('delayLevel').addEventListener('change', function() {
+			send2.gain.value = this.value;
+		});
+	})
+//	$(function () {
+//		document.getElementById('distortionLevel').addEventListener('change', function() {
+//			send2.gain.value = this.value;
+//		});
+//	})
+
 }
 function stopSound() {
+    delayFeedback.gain.value = 0;
+    delayFilter.frequency.value = 0;
+	
   if (source1) {
     source1.stop(0); // Stop source 1 immediately
   }
@@ -180,14 +208,17 @@ var gain_1 = context.createGain(); // Create source gain node for channel 1
 var gain_2 = context.createGain(); // Create source gain node for channel 2
 var gain_3 = context.createGain(); // Create source gain node for channel 3
 var gain_4 = context.createGain(); // Create source gain node for channel 4
+
 var pan_1 = context.createPanner(); // Create panner node for channel 1
 var pan_2 = context.createPanner(); // Create panner node for channel 2
 var pan_3 = context.createPanner(); // Create panner node for channel 3
 var pan_4 = context.createPanner(); // Create panner node for channel 4
+
 var vol_1 = context.createGain(); // Create volume gain node for channel 1
 var vol_2 = context.createGain(); // Create volume gain node for channel 2
 var vol_3 = context.createGain(); // Create volume gain node for channel 3
 var vol_4 = context.createGain(); // Create volume gain node for channel 4
+
 var mute_1 = context.createGain(); // Create mute routing gain node channel 1
 var mute_2 = context.createGain(); // Create mute routing gain node channel 2
 var mute_3 = context.createGain(); // Create mute routing gain node channel 3
@@ -195,21 +226,95 @@ var mute_4 = context.createGain(); // Create mute routing gain node channel 4
 
 var send1_1 = context.createGain(); // Create routing gain node for send 1 for channel 1
 var send2_1 = context.createGain(); // Create routing gain node for send 2 for channel 1
+var send3_1 = context.createGain(); // Create routing gain node for send 3 for channel 1
+var sendmain_1 = context.createGain(); // Create routing gain node for main bus for channel 1
+
 var send1_2 = context.createGain(); // Create routing gain node for send 1 for channel 2
 var send2_2 = context.createGain(); // Create routing gain node for send 2 for channel 2
+var send3_2 = context.createGain(); // Create routing gain node for send 3 for channel 2
+var sendmain_2 = context.createGain(); // Create routing gain node for main bus for channel 2
+
 var send1_3 = context.createGain(); // Create routing gain node for send 1 for channel 3
 var send2_3 = context.createGain(); // Create routing gain node for send 2 for channel 3
+var send3_3 = context.createGain(); // Create routing gain node for send 3 for channel 3
+var sendmain_3 = context.createGain(); // Create routing gain node for main bus for channel 3
+
 var send1_4 = context.createGain(); // Create routing gain node for send 1 for channel 4
 var send2_4 = context.createGain(); // Create routing gain node for send 2 for channel 4
-var sendmain_1 = context.createGain(); // Create routing gain node for main bus for channel 1
-var sendmain_2 = context.createGain(); // Create routing gain node for main bus for channel 2
-var sendmain_3 = context.createGain(); // Create routing gain node for main bus for channel 3
+var send3_4 = context.createGain(); // Create routing gain node for send 3 for channel 4
 var sendmain_4 = context.createGain(); // Create routing gain node for main bus for channel 4
 
+// Distortion
+var distortion = context.createWaveShaper(); // Create waveshaper node for distortion fx
+function makeDistortionCurve( amount ) {
+  var k = typeof amount === 'number' ? amount : 50,
+    n_samples = 44100,
+    curve = new Float32Array(n_samples),
+    deg = Math.PI / 180,
+    i = 0,
+    x;
+  for ( ; i < n_samples; ++i ) {
+    x = i * 2 / n_samples - 1;
+    curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+  }
+  return curve;
+};
+
+distortion.curve = makeDistortionCurve(400);
+distortion.oversample = '4x';
+	
+// Reverb
 var reverb = context.createConvolver(); // Create convolver node for reverb fx
+
+// Delay
 var delay = context.createDelay(); // Create delay node for delay fx
-var send1 = context.createGain(); // Create routing gain node for send 1
-var send2 = context.createGain(); // Create routing gain node for send 2
+
+	delay.delayTime.value = 0.5;
+
+    delayFeedback = context.createGain();
+    delayFeedback.gain.value = 0.8;
+ 
+    delayFilter = context.createBiquadFilter();
+    delayFilter.frequency.value = 1000;
+
+    delay.connect(delayFeedback);
+    delayFeedback.connect(delayFilter);
+    delayFilter.connect(delay);
+	
+ $(function () {
+	document.getElementById('delayTime').addEventListener('change', function() {
+		delay.delayTime.value = this.value;
+	});
+})
+$(function () {
+	document.getElementById('delayFeedback').addEventListener('change', function() {
+		delayFeedback.gain.value = this.value;
+	});
+})
+$(function () {
+	document.getElementById('delayFilter').addEventListener('change', function() {
+		delayFilter.frequency.value = this.value;
+	});
+})	
+	
+var send1 = context.createGain(); // Create routing gain node for send 1 (reverb)
+
+var send2 = context.createGain(); // Create routing gain node for send 2 (delay)
+send2.gain.value = 1;
+$(function () {
+	document.getElementById('delayLevel').addEventListener('change', function() {
+		send2.gain.value = this.value;
+	});
+})
+
+var send3 = context.createGain(); // Create routing gain node for send 3 (distortion)
+send3.gain.value = 0.3;
+// $(function () {
+// 	document.getElementById('distortionLevel').addEventListener('change', function() {
+// 		send3.gain.value = this.value;
+// 	});
+// })
+
 var comp_global = context.createDynamicsCompressor(); // Create global compressor node
 var gain_master = context.createGain(); // Create master gain node
 
@@ -447,30 +552,130 @@ $(function () {
 		var z = Math.sin(zDeg * (Math.PI / 180));
 		pan_4.setPosition(x, 0, z);
     }});	
-		
-})
 
+	$('#reverb-1').dial({'change': function (v) {
+		send1_1.gain.value = v / 10;
+	}});
+	$('#reverb-2').dial({'change': function (v) {
+		send1_2.gain.value = v / 10;
+	}});
+	$('#reverb-3').dial({'change': function (v) {
+		send1_3.gain.value = v / 10;
+	}});
+	$('#reverb-4').dial({'change': function (v) {
+		send1_4.gain.value = v / 10;
+	}});
+
+	// Send2 (Delay) Initial Channel gains
+	send2_1.gain.value = 0; // 0% for channel 1
+	send2_2.gain.value = 0; // 0% for channel 2
+	send2_3.gain.value = 0; // 0% for channel 3
+	send2_4.gain.value = 0; // 0% for channel 4
+
+	$('#delay-1').dial({'change': function (v) {
+		send2_1.gain.value = v / 10;
+	}});
+	$('#delay-2').dial({'change': function (v) {
+		send2_2.gain.value = v / 10;
+	}});
+	$('#delay-3').dial({'change': function (v) {
+		send2_3.gain.value = v / 10;
+	}});
+	$('#delay-4').dial({'change': function (v) {
+		send2_4.gain.value = v / 10;
+	}});
+
+	// Send3 (Distortion) Initial Channel gains
+	send3_1.gain.value = 0; // 0% for channel 1
+	send3_2.gain.value = 0; // 0% for channel 2
+	send3_3.gain.value = 0; // 0% for channel 3
+	send3_4.gain.value = 0; // 0% for channel 4
+
+	$('#distortion-1').dial({'change': function (v) {
+		send3_1.gain.value = v / 10;
+	}});
+	$('#distortion-2').dial({'change': function (v) {
+		send3_2.gain.value = v / 10;
+	}});
+	$('#distortion-3').dial({'change': function (v) {
+		send3_3.gain.value = v / 10;
+	}});
+	$('#distortion-4').dial({'change': function (v) {
+		send3_4.gain.value = v / 10;
+	}});	
+})
+ 
 // Wiring
+
+// Channel One Main Bus
 gain_1.connect(pan_1);
 pan_1.connect(vol_1);
 vol_1.connect(sendmain_1);
 sendmain_1.connect(comp_global);
+// Channel One Reverb Send
+vol_1.connect(send1_1);
+send1_1.connect(reverb);
+// Channel One Delay Send
+vol_1.connect(send2_1);
+send2_1.connect(delay);
+// Channel One Distortion Send
+vol_1.connect(send3_1);
+send3_1.connect(distortion);
 
+// Channel Two Main Bus
 gain_2.connect(pan_2);
 pan_2.connect(vol_2);
 vol_2.connect(sendmain_2);
 sendmain_2.connect(comp_global);
+// Channel Two Reverb Send
+vol_2.connect(send1_2);
+send1_2.connect(reverb);
+// Channel Two Delay Send
+vol_2.connect(send2_2);
+send2_2.connect(delay);
+// Channel Two Distortion Send
+vol_2.connect(send3_2);
+send3_2.connect(distortion);
 
+// Channel Three Main Bus
 gain_3.connect(pan_3);
 pan_3.connect(vol_3);
 vol_3.connect(sendmain_3);
 sendmain_3.connect(comp_global);
+// Channel Three Reverb Send
+vol_3.connect(send1_3);
+send1_3.connect(reverb);
+// Channel Three Delay Send
+vol_3.connect(send2_3);
+send2_3.connect(delay);
+// Channel Three Distortion Send
+vol_3.connect(send3_3);
+send3_3.connect(distortion);
 
+// Channel Four Main Bus
 gain_4.connect(pan_4);
 pan_4.connect(vol_4);
 vol_4.connect(sendmain_4);
 sendmain_4.connect(comp_global);
+// Channel Four Reverb Send
+vol_4.connect(send1_4);
+send1_4.connect(reverb);
+// Channel Four Delay Send
+vol_4.connect(send2_4);
+send2_4.connect(delay);
+// Channel One Distortion Send
+vol_4.connect(send3_4);
+send3_4.connect(distortion);
 
+// Effects Sends
+reverb.connect(send1);
+send1.connect(comp_global);	
+delay.connect(send2);
+send2.connect(comp_global);
+distortion.connect(send3);
+send3.connect(comp_global);
+
+// Final Mastering
 comp_global.connect(gain_master);
 gain_master.connect(context.destination);
 
@@ -545,7 +750,10 @@ $('#mute-1').change(function () {
 	} else {
 		vol_1.disconnect(0);
 		mute_1.disconnect(0);
-		vol_1.connect(sendmain_1);		
+		vol_1.connect(sendmain_1);
+		vol_1.connect(send1_1);		
+		vol_1.connect(send2_1);
+		vol_1.connect(send3_1);		
 	}
 })
 $('#mute-2').change(function () {
@@ -557,6 +765,9 @@ $('#mute-2').change(function () {
 		vol_2.disconnect(0);
 		mute_2.disconnect(0);
 		vol_2.connect(sendmain_2);
+		vol_2.connect(send1_2);
+		vol_2.connect(send2_2);
+		vol_2.connect(send3_2);		
 	}
 })
 $('#mute-3').change(function () {
@@ -568,6 +779,9 @@ $('#mute-3').change(function () {
 		vol_3.disconnect(0);
 		mute_3.disconnect(0);
 		vol_3.connect(sendmain_3);
+		vol_3.connect(send1_3);
+		vol_3.connect(send2_3);	
+		vol_3.connect(send3_3);			
 	}
 })
 $('#mute-4').change(function () {
@@ -579,45 +793,8 @@ $('#mute-4').change(function () {
 		vol_4.disconnect(0);
 		mute_4.disconnect(0);
 		vol_4.connect(sendmain_4);
-	}
-})
-
-// Reverb wiring
-$('#reverb-1').change(function () {
-	if ($(this).attr('checked') === 'checked') {
-        send1_1.gain.value = 1;  // Set source1 reverb gain to full	
-	} else {
-        send1_1.gain.value = 0;  // Set source1 reverb gain to zero	
-	}
-})
-$('#reverb-2').change(function () {
-	if ($(this).attr('checked') === 'checked') {
-        send1_2.gain.value = 1;  // Set source2 reverb gain to full	
-	} else {
-        send1_2.gain.value = 0;  // Set source2 reverb gain to zero
-	}
-})
-$('#reverb-3').change(function () {
-	if ($(this).attr('checked') === 'checked') {
-		vol_3.disconnect(0);
-		vol_3.connect(send1_3);
-		send1_3.connect(reverb);
-		reverb.connect(send1);
-	} else {
-		vol_3.disconnect(0);
-		reverb.disconnect(0);
-		vol_3.connect(send1_3);
-	}
-})
-$('#reverb-4').change(function () {
-	if ($(this).attr('checked') === 'checked') {
-		vol_4.disconnect(0);
 		vol_4.connect(send1_4);
-		send1_4.connect(reverb);
-		reverb.connect(send1);
-	} else {
-		vol_4.disconnect(0);
-		reverb.disconnect(0);
-		vol_4.connect(send1_4);
+		vol_4.connect(send2_4);
+		vol_4.connect(send3_4);		
 	}
 })
