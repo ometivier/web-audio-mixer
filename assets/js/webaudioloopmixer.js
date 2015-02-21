@@ -3,7 +3,7 @@
  * Description: Four Channel Loop Mixer with Effects. Audio Source via User Media.
  * Author: Obadiah Metivier
  * Author URI: http://middleearmedia.com/webaudioloopmixer/
- * Version: 2.2
+ * Version: 2.2.1
  */
 
 // This makes the knobs work (along with jquery.knob.js)

@@ -3,7 +3,7 @@
 Author: Obadiah Metivier
 Author URI: http://middleearmedia.com/webaudioloopmixer/
 Tags: web audio api, mixer, loop, html5, css3, javascript, jquery, middle ear media, obadiah metivier
-Stable tag: 2.2
+Stable tag: 2.2.1
 
 Web Audio Loop Mixer is a four channel mixer with effects. To get the party started, select an audio source file (mp3 or wav, etc.) from your hard drive for each channel.
 
@@ -36,3 +36,6 @@ Web Audio Loop Mixer is a four channel mixer with effects. To get the party star
 
 = 2.2 =
 * Add Distortion function. Add Distortion knobs. Wire up FX and FX sends. Add Distortion controls. Add webkit fallback to audioContext. Change color of delay to pink. Change color of distortion to purple. Update readme.txt. 02/14/2015.
+
+= 2.2.1 =
+* Add CSS styles for the input range slider. 02/21/2015.
